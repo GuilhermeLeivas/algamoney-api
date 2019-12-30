@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.algaworks.algamoneyapi.event.RecursoCriadoEvent;
 import com.algaworks.algamoneyapi.model.Pessoa;
 import com.algaworks.algamoneyapi.repository.PessoaRepository;
+import com.algaworks.algamoneyapi.repository.filter.PessoaFilter;
 import com.algaworks.algamoneyapi.service.PessoaService;
 
 @RestController
@@ -38,10 +39,10 @@ public class PessoaResource {
 	@Autowired
 	private ApplicationEventPublisher publisher;
 
-	@GetMapping	// Lista todas pessoas
+	@GetMapping	// Lista todas pessoas, ou filtra por nomes
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
-	public Iterable<Pessoa> listaPessoas() {
-		return pr.findAll();
+	public Iterable<Pessoa> listaPessoas(PessoaFilter pessoaFilter) {
+		return pr.filtrarPessoaPorNome(pessoaFilter);
 	}
 
 	@GetMapping("/{codigo}")	//Lista por ID
